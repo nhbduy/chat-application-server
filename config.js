@@ -1,14 +1,23 @@
-const SERVER_NAME = '';
-
 const SERVER_PORT = process.env.PORT || 5000;
 
-const DATABASE_URL = '';
+const DB_CONNECTION = {
+  client: 'pg',
+  connection: {
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  }
+};
 
-const DATABASE_NAME = '';
+const SOCKET_MSG = {
+  connection: 'connection',
+  disconnect: 'disconnect',
+  join: 'join',
+  message: 'message',
+  sendMessage: 'sendMessage'
+};
 
 module.exports = {
-  SERVER_NAME,
   SERVER_PORT,
-  DATABASE_URL,
-  DATABASE_NAME
+  DB_CONNECTION,
+  SOCKET_MSG
 };
