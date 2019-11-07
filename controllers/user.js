@@ -1,4 +1,10 @@
-const users = []; // TODO: read from DB later
+// TODO: read from DB later
+const users = [
+  { id: 1, name: 'A', room: 'room01' },
+  { id: 2, name: 'B', room: 'room01' },
+  { id: 3, name: 'C', room: 'room02' },
+  { id: 4, name: 'D', room: 'room01' }
+];
 
 // Functipn: get an existing user
 const getUser = id => users.find(u => u.id === id);
@@ -28,7 +34,7 @@ const addUser = ({ id, name, room }) => {
 const removeUser = id => {
   const index = users.findIndex(u => u.id === id);
 
-  //remove if user found
+  // remove if user found
   if (index !== -1) {
     const removedUser = users.splice(index, 1)[0];
     return removedUser;

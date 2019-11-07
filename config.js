@@ -16,8 +16,15 @@ const SOCKET_MSG = {
   sendMessage: 'sendMessage'
 };
 
+const MSG_TYPE = {
+  admin: 0,
+  sent: 1,
+  replies: 2
+};
+
 module.exports = {
   SERVER_PORT,
   DB_CONNECTION,
-  SOCKET_MSG
+  SOCKET_MSG,
+  MSG_TYPE
 };
