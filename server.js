@@ -1,9 +1,9 @@
-const SERVER_PORT = 3000;
-
 const express = require('express');
+
+const { SERVER_PORT } = require('./config');
 
 const app = express();
 
 app.listen(SERVER_PORT, () => {
-  console.log('It works!!!');
-})
+  console.log(`Server is start on port ${SERVER_PORT}`);
+});
