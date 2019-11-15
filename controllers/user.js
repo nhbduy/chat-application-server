@@ -6,6 +6,21 @@ const users = [
   { id: 4, name: 'D', room: 'room01' }
 ];
 
+const knex = require('knex');
+
+const { DB_CONNECTION, DB_TABLES } = require('../config');
+
+// Function: get all users online
+async function asyncGetOnlineUsers() {
+  try {
+    return await knex(DB_CONNECTION)(DB_TABLES.users)
+      .where('online', 1)
+      .select();
+  } catch (error) {
+    return error;
+  }
+}
+
 // Functipn: get an existing user
 const getUser = id => users.find(u => u.id === id);
 
@@ -42,6 +57,7 @@ const removeUser = id => {
 };
 
 module.exports = {
+  asyncGetOnlineUsers,
   getUser,
   getAllUsersInRoom,
   addUser,

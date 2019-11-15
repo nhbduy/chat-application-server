@@ -1,7 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-
-const knex = require('knex');
 const socketio = require('socket.io');
 const http = require('http');
 
@@ -13,7 +11,7 @@ const http = require('http');
 //------------------------------------------------------
 
 // get configuration
-const { SERVER_PORT, DB_CONNECTION, SOCKET_MSG } = require('./config');
+const { SERVER_PORT } = require('./config');
 
 const router = require('./router');
 

@@ -2,6 +2,7 @@
 const { SOCKET_MSG, MSG_TYPE } = require('./config');
 
 const {
+  asyncGetOnlineUsers,
   getUser,
   getAllUsersInRoom,
   addUser,
@@ -9,10 +10,10 @@ const {
 } = require('./controllers/user');
 
 //-----------------------------------------------------------------------
-const messageFormat = (user, text, type) => {
+const messageFormat = (id, user, text, type) => {
   const time = new Date();
 
-  return { user, text, type, time: time.toLocaleString() };
+  return { id, user, text, type, time: time.toLocaleString() };
 };
 
 function sendRoomData(socketio, room) {
@@ -20,6 +21,17 @@ function sendRoomData(socketio, room) {
   socketio.to(room).emit(MSG_TYPE.roomData, {
     room,
     users: getAllUsersInRoom(room)
+  });
+}
+
+function handleSocketOnlineUsersList(socket) {
+  socket.on(SOCKET_MSG.onlineUsers, (data, callback) => {
+    asyncGetOnlineUsers()
+      .then(list => {
+        // send online users list to current user
+        if (list && list.length) callback(list);
+      })
+      .catch(error => console.log(error));
   });
 }
 
@@ -51,6 +63,7 @@ function handleSocketUserJoin(socket, socketio) {
     socket.emit(
       SOCKET_MSG.message,
       messageFormat(
+        socket.id,
         'admin',
         `Hi ${name}, welcome to room ${room}`,
         MSG_TYPE.admin
@@ -62,7 +75,7 @@ function handleSocketUserJoin(socket, socketio) {
       .to(room)
       .emit(
         SOCKET_MSG.message,
-        messageFormat('admin', `${name} has joined.`, MSG_TYPE.admin)
+        messageFormat(socket.id, 'admin', `${name} has joined.`, MSG_TYPE.admin)
       );
 
     socket.join(room);
@@ -86,7 +99,10 @@ function handleSocketUserSendMessage(socket, socketio) {
 
     socketio
       .to(room)
-      .emit(SOCKET_MSG.message, messageFormat(name, message, MSG_TYPE.sent));
+      .emit(
+        SOCKET_MSG.message,
+        messageFormat(socket.id, name, message, MSG_TYPE.sent)
+      );
 
     sendRoomData(socketio, room);
 
@@ -117,7 +133,7 @@ function handleSocketDisconnect(socket, socketio) {
         .to(room)
         .emit(
           SOCKET_MSG.message,
-          messageFormat('admin', `${name} has left.`, MSG_TYPE.admin)
+          messageFormat(socket.id, 'admin', `${name} has left.`, MSG_TYPE.admin)
         );
     }
 
@@ -129,6 +145,8 @@ function handleSocketDisconnect(socket, socketio) {
 function handdleSocketOpenConnection(socketio) {
   socketio.on(SOCKET_MSG.connection, socket => {
     console.log('New connection is added.');
+
+    handleSocketOnlineUsersList(socket, socketio);
 
     handleSocketUserJoin(socket, socketio);
 
