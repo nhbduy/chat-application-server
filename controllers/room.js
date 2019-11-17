@@ -6,7 +6,7 @@ const { rooms, usersRooms } = require('../mockData');
 // Function: get list
 function getAvailableRooms() {
   let list = null;
-  list = rooms; // .filter(u => u.online === 1 && u.name !== 'admin');
+  list = rooms.filter(u => u.type === 2);
 
   if (list && list.length > 1) list.sort((a, b) => (a.name > b.name ? 1 : -1));
 
@@ -17,7 +17,17 @@ function getAvailableRooms() {
 // Function: connect
 function setNewRoom(userId, roomName, roomType) {
   // check existed room name
-  const existedRoom = rooms.filter(r => r.name === roomName);
+  let p2pReversedName = null;
+  if (roomType === 1) {
+    p2pReversedName = roomName
+      .split('-')
+      .reverse()
+      .join('-');
+  }
+
+  const existedRoom = rooms.filter(
+    r => r.name === roomName || r.name === p2pReversedName
+  );
   if (existedRoom && existedRoom.length) return null;
 
   // add new group to room list
@@ -27,9 +37,6 @@ function setNewRoom(userId, roomName, roomType) {
     type: roomType
   };
   rooms.push(newRoom);
-
-  // set current user auto-join room
-  setJoinRoom(userId, newRoom.id);
 
   return newRoom;
 }

@@ -11,30 +11,30 @@ const rooms = [
 ];
 
 const usersRooms = [
-  { id: 1, user_id: 2, room_id: 1 },
-  { id: 2, user_id: 3, room_id: 1 },
-  { id: 3, user_id: 4, room_id: 1 },
-  { id: 4, user_id: 2, room_id: 2 },
-  { id: 5, user_id: 3, room_id: 2 }
+  // { id: 1, user_id: 2, room_id: 1 },
+  // { id: 2, user_id: 3, room_id: 1 },
+  // { id: 3, user_id: 4, room_id: 1 },
+  // { id: 4, user_id: 2, room_id: 2 },
+  // { id: 5, user_id: 3, room_id: 2 }
 ];
 
 const messages = [
-  {
-    id: 1,
-    sender_id: 2,
-    room_id: 1,
-    content: 'Hi guys',
-    create_at: '2019-11-15 19:59:01',
-    seen_by: [1, 2]
-  },
-  {
-    id: 1,
-    sender_id: 2,
-    room_id: 2,
-    content: 'Hey Bob, are you there?',
-    create_at: '2019-11-16 20:00:00',
-    seen_by: [2]
-  }
+  // {
+  //   id: 1,
+  //   sender_id: 2,
+  //   room_id: 1,
+  //   content: 'Hi guys',
+  //   create_at: '2019-11-15 19:59:01',
+  //   seen_by: [1, 2]
+  // },
+  // {
+  //   id: 1,
+  //   sender_id: 2,
+  //   room_id: 2,
+  //   content: 'Hey Bob, are you there?',
+  //   create_at: '2019-11-16 20:00:00',
+  //   seen_by: [2]
+  // }
 ];
 
 module.exports = {
