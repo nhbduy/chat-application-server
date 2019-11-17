@@ -1,7 +1,7 @@
 CREATE TABLE TA_USERS (
   id int NOT NULL AUTO_INCREMENT,
   name varchar(100) NOT NULL UNIQUE,
-  online tinyint(1),
+  online tinyint(1) DEFAULT 0,
   joined datetime,
   last_active datetime,
   PRIMARY KEY (id)

@@ -20,6 +20,7 @@ const DB_TABLES = {
 const SOCKET_MSG = {
   connection: 'connection',
   disconnect: 'disconnect',
+  setOnline: 'setOnline',
   join: 'join',
   message: 'message',
   sendMessage: 'sendMessage',

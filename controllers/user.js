@@ -1,65 +1,93 @@
-// TODO: read from DB later
-const users = [
-  { id: 1, name: 'A', room: 'room01' },
-  { id: 2, name: 'B', room: 'room01' },
-  { id: 3, name: 'C', room: 'room02' },
-  { id: 4, name: 'D', room: 'room01' }
-];
+/* eslint-disable import/order */
 
-const knex = require('knex');
+const { users } = require('../mockData');
 
-const { DB_CONNECTION, DB_TABLES } = require('../config');
+//--------------------------------------------------------------
+// Function: login or register
+function checkUserLogin(req, res) {
+  const { name } = req.body;
+  let currentUser = {};
 
-// Function: get all users online
-async function asyncGetOnlineUsers() {
+  const existedUser = users.filter(u => u.name === name);
+
+  // not existed
+  if (existedUser && existedUser.length) currentUser = { ...existedUser[0] };
+  else {
+    currentUser = {
+      id: users.length + 1,
+      name,
+      online: 0,
+      joined: new Date(),
+      last_active: ''
+    };
+
+    users.push(currentUser);
+  }
+
   try {
-    return await knex(DB_CONNECTION)(DB_TABLES.users)
-      .where('online', 1)
-      .select();
+    return res.status(200).json({
+      status: 200,
+      message: 'handleCheckLogin ok',
+      user: currentUser
+    });
   } catch (error) {
-    return error;
+    console.log('user handleCheckLogin', error);
+    return res.status(400).json({
+      status: 400,
+      message: 'handleCheckLogin ko'
+    });
   }
 }
 
-// Functipn: get an existing user
-const getUser = id => users.find(u => u.id === id);
+//--------------------------------------------------------------
+// Function: connect
+function getOnlineUsers() {
+  let list = null;
+  list = users.filter(u => u.online === 1 && u.name !== 'admin');
 
-// Function: get all users in a room
-const getAllUsersInRoom = room => users.filter(u => u.room === room);
+  if (list && list.length > 1) list.sort((a, b) => (a.name > b.name ? 1 : -1));
 
-// Function: add new user
-const addUser = ({ id, name, room }) => {
-  const nameFormatted = name.trim().toLowerCase();
-  const roomFormatted = room.trim().toLowerCase();
+  return list;
+}
 
-  const isExistingUser = users.find(
-    u => u.name === nameFormatted && u.room === roomFormatted
-  );
+//--------------------------------------------------------------
+// Function: connect
+function setUserConnect(name) {
+  let currentUser = null;
 
-  if (isExistingUser) return { error: 'Username is already taken.' };
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].name === name) {
+      users[i] = { ...users[i], online: 1, last_active: new Date() };
 
-  // add new user to database
-  const newUser = { id, name: nameFormatted, room: roomFormatted };
-  users.push(newUser);
-
-  return { newUser };
-};
-
-// Function: remove existing user
-const removeUser = id => {
-  const index = users.findIndex(u => u.id === id);
-
-  // remove if user found
-  if (index !== -1) {
-    const removedUser = users.splice(index, 1)[0];
-    return removedUser;
+      currentUser = users[i];
+      break;
+    }
   }
-};
 
+  return currentUser;
+}
+
+//--------------------------------------------------------------
+// Function: disconnect
+function setUserDisconnect(name) {
+  let currentUser = null;
+
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].name === name) {
+      users[i] = { ...users[i], online: 0, last_active: new Date() };
+
+      currentUser = users[i];
+      break;
+    }
+  }
+
+  return currentUser;
+}
+
+//--------------------------------------------------------------
 module.exports = {
-  asyncGetOnlineUsers,
-  getUser,
-  getAllUsersInRoom,
-  addUser,
-  removeUser
+  checkUserLogin,
+  getOnlineUsers,
+  setUserConnect,
+  setUserDisconnect
 };

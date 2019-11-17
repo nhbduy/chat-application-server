@@ -3,6 +3,8 @@ const cors = require('cors');
 const socketio = require('socket.io');
 const http = require('http');
 
+const { checkUserLogin } = require('./controllers/user');
+
 //------------------------------------------------------
 // if (process.env.NODE_ENV !== 'production') {
 //   const dotenv = require('dotenv');
@@ -23,13 +25,18 @@ app.use(express.json());
 app.use(cors());
 app.use(router);
 
+//-------------------------------------------------
+// API
+
+// check login on Welcome screen => login or register
+app.post('/checkLogin', checkUserLogin);
+
+//-------------------------------------------------
+// SOCKET
 const server = http.createServer(app);
-const socket = socketio(server);
 
 // socket: open new connection
-handdleSocketOpenConnection(socket);
-
-// const knexDB = knex(DB_CONNECTION);
+handdleSocketOpenConnection(socketio(server));
 
 server.listen(SERVER_PORT, () => {
   console.log(`Server is started on port ${SERVER_PORT}`);
