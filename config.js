@@ -1,6 +1,6 @@
 const SERVER_PORT = process.env.PORT || 5000;
 
-const DB_MODE = 3; // 1-MySQL, 2-PG, 3-PG-PROD
+const DB_MODE = 2; // 1-MySQL, 2-PG, 3-PG-PROD
 
 const DB_CONNECTION_MYSQL = {
   client: 'mysql',
