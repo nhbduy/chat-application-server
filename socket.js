@@ -16,6 +16,7 @@ const {
 } = require('./controllers/RoomController');
 
 const {
+  getAllMessages,
   getMessagesInRoom,
   setNewMessage
 } = require('./controllers/MessageController');
@@ -84,7 +85,7 @@ function socketUserJoinRoom(client, socket) {
     if (!reUserRoom) {
       // null when existed
       console.log(`${user.name} has already joined in ${room.name}`);
-      socketUserGetMessageList(room, socket);
+      socketUserGetMessageList(room, client, socket);
       return;
     }
 
@@ -98,7 +99,7 @@ function socketUserJoinRoom(client, socket) {
       `Hi ${user.name}, welcome to room ${room.name}`
     );
 
-    socketUserGetMessageList(room, socket);
+    socketUserGetMessageList(room, client, socket);
   });
 }
 
@@ -113,7 +114,7 @@ function socketUserLeaveRoom(client, socket) {
     if (!reUserRoom) {
       // null when not existed
       console.log(`${user.name} has already left from ${room.name}`);
-      socketUserGetMessageList(room, socket);
+      socketUserGetMessageList(room, client, socket);
       return;
     }
 
@@ -124,10 +125,10 @@ function socketUserLeaveRoom(client, socket) {
     setNewMessage(
       adminId,
       room.id,
-      `${user.name}, has left from room ${room.name}`
+      `${user.name} has left from room ${room.name}`
     );
 
-    socketUserGetMessageList(room, socket);
+    socketUserGetMessageList(room, client, socket);
   });
 }
 
@@ -138,14 +139,16 @@ function socketUserSendMessage(client, socket) {
 
     setNewMessage(user.id, room.id, message);
 
-    socketUserGetMessageList(room, socket);
+    socketUserGetMessageList(room, client, socket);
   });
 }
 
 //-----------------------------------------------------------------------
-function socketUserGetMessageList(room, socket) {
-  const list = getMessagesInRoom(room.id);
-  socket.to(room.name).emit(SOCKET_MSG.message, list);
+function socketUserGetMessageList(room, client, socket) {
+  const list = getAllMessages();
+  // TODO: improve with getMessagesInRoom(room.id);
+
+  socket.emit(SOCKET_MSG.message, list);
 }
 
 //-----------------------------------------------------------------------

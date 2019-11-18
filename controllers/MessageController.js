@@ -9,6 +9,15 @@ asyncGetListDB().then(list => (messages = list));
 
 //--------------------------------------------------------------
 // Function: get messages in room
+function getAllMessages() {
+  let list = null;
+  list = messages;
+
+  return list;
+}
+
+//--------------------------------------------------------------
+// Function: get messages in room
 function getMessagesInRoom(roomId) {
   let list = null;
   list = messages.filter(m => m.room_id === roomId);
@@ -37,6 +46,7 @@ function setNewMessage(userId, roomId, content) {
 
 //--------------------------------------------------------------
 module.exports = {
+  getAllMessages,
   getMessagesInRoom,
   setNewMessage
 };
