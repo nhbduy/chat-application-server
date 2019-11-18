@@ -21,7 +21,7 @@ Install database in your local machine with attached scripts:
 
 Runs the app in the development mode with `nodemon`.
 ```cmd
-npm start-dev
+npm run start-dev
 ```
 
 Open [http://localhost:5000](http://localhost:5000) (port 5000 by default) to view it in the browser.
