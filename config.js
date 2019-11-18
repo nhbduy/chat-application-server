@@ -15,7 +15,7 @@ const DB_CONNECTION_MYSQL = {
 const DB_CONNECTION_PG = {
   client: 'pg',
   connection: {
-    host: process.env.DATABASE_URL || '127.0.0.1',
+    host: '127.0.0.1',
     user: process.env.DATABASE_USER || 'nhbduy',
     password: process.env.DATABASE_PASSWORD || '',
     database: process.env.DATABASE_NAME || 'chat-application'
@@ -25,7 +25,7 @@ const DB_CONNECTION_PG = {
 const DB_CONNECTION_PG_PROD = {
   client: 'pg',
   connection: {
-    host: process.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL,
     ssl: true
   }
 };
