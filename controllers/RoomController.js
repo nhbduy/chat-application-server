@@ -32,6 +32,19 @@ function getAvailableRooms() {
 }
 
 //--------------------------------------------------------------
+// Function: get list
+function getRoomToConnect(roomName) {
+  let result = null;
+  const list = rooms.filter(
+    u => encodeURI(u.name).toLowerCase() === encodeURI(roomName).toLowerCase()
+  );
+
+  if (list && list.length) result = { ...list[0] };
+
+  return result;
+}
+
+//--------------------------------------------------------------
 // Function: connect
 function setNewRoom(userId, roomName, roomType) {
   // check existed room name
@@ -98,6 +111,7 @@ function setLeaveRoom(userId, roomId) {
 //--------------------------------------------------------------
 module.exports = {
   getAvailableRooms,
+  getRoomToConnect,
   setNewRoom,
   setJoinRoom,
   setLeaveRoom

@@ -10,6 +10,7 @@ const {
 
 const {
   getAvailableRooms,
+  getRoomToConnect,
   setNewRoom,
   setJoinRoom,
   setLeaveRoom
@@ -23,11 +24,12 @@ const {
 
 //-----------------------------------------------------------------------
 function socketUserConnect(client, socket) {
-  client.on('userConnect', (name, callback) => {
-    const user = setUserConnect(name);
+  client.on('userConnect', ({ userName, roomName }, callback) => {
+    const user = setUserConnect(userName);
+    const room = getRoomToConnect(roomName);
 
     if (user) {
-      callback(user);
+      callback({ userRes: user, roomRes: room });
 
       // notify online user list to all users (include sender)
       const userList = getOnlineUsers();
@@ -36,6 +38,8 @@ function socketUserConnect(client, socket) {
       // notify available room list to all users (include sender)
       const roomList = getAvailableRooms();
       if (roomList) socket.emit('getAvailableRooms', roomList);
+
+      // if user has an invitation room
     }
   });
 }
@@ -140,6 +144,8 @@ function socketUserSendMessage(client, socket) {
     setNewMessage(user.id, room.id, message);
 
     socketUserGetMessageList(room, client, socket);
+
+    socketUserGetNotification({ user, room }, client, socket);
   });
 }
 
@@ -148,7 +154,13 @@ function socketUserGetMessageList(room, client, socket) {
   const list = getAllMessages();
   // TODO: improve with getMessagesInRoom(room.id);
 
+  // client.broadcast.to(room.name).emit(SOCKET_MSG.message, list);
   socket.emit(SOCKET_MSG.message, list);
+}
+
+//-----------------------------------------------------------------------
+function socketUserGetNotification({ user, room }, client, socket) {
+  socket.emit('notification', { user, room });
 }
 
 //-----------------------------------------------------------------------
