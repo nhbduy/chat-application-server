@@ -19,9 +19,9 @@ Install database in your local machine with attached scripts:
 > NOTE: Do not forget to configure your setting environment at [config.js](https://raw.githubusercontent.com/nhbduy/chat-application-server/master/config.js) file
 
 
-Runs the app in the development mode.
+Runs the app in the development mode with `nodemon`.
 ```cmd
-npm start
+npm start-dev
 ```
 
 Open [http://localhost:5000](http://localhost:5000) (port 5000 by default) to view it in the browser.
