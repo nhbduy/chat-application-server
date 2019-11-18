@@ -25,7 +25,7 @@ const DB_CONNECTION_PG = {
 const DB_CONNECTION_PG_PROD = {
   client: 'pg',
   connection: {
-    connectionString: process.env.DATABASE_URL,
+    host: process.env.DATABASE_URL,
     ssl: true
   }
 };
