@@ -1,6 +1,8 @@
 const SERVER_PORT = process.env.PORT || 5000;
 
-const DB_CONNECTION = {
+const DB_MODE = 3; // 1-MySQL, 2-PG, 3-PG-PROD
+
+const DB_CONNECTION_MYSQL = {
   client: 'mysql',
   connection: {
     connectionString: process.env.DATABASE_URL || '127.0.0.1',
@@ -10,11 +12,29 @@ const DB_CONNECTION = {
   }
 };
 
+const DB_CONNECTION_PG = {
+  client: 'pg',
+  connection: {
+    host: process.env.DATABASE_URL || '127.0.0.1',
+    user: process.env.DATABASE_USER || 'nhbduy',
+    password: process.env.DATABASE_PASSWORD || '',
+    database: process.env.DATABASE_NAME || 'chat-application'
+  }
+};
+
+const DB_CONNECTION_PG_PROD = {
+  client: 'pg',
+  connection: {
+    connectionString: process.env.DATABASE_URL,
+    ssl: true
+  }
+};
+
 const DB_TABLES = {
-  users: 'TA_USERS',
-  rooms: 'TA_ROOMS',
-  re_users_rooms: 'RE_USERS_ROOMS',
-  messages: 'TA_MESSAGES'
+  users: 'ta_users',
+  rooms: 'ta_rooms',
+  re_users_rooms: 're_users_rooms',
+  messages: 'ta_messages'
 };
 
 const SOCKET_MSG = {
@@ -37,7 +57,15 @@ const MSG_TYPE = {
 
 module.exports = {
   SERVER_PORT,
-  DB_CONNECTION,
+  DB_MODE,
+  DB_CONNECTION: (() => {
+    if (DB_MODE === 1) return DB_CONNECTION_MYSQL;
+    if (DB_MODE === 2) return DB_CONNECTION_PG;
+    if (DB_MODE === 3) return DB_CONNECTION_PG_PROD;
+
+    // default
+    return DB_CONNECTION_MYSQL;
+  })(),
   DB_TABLES,
   SOCKET_MSG,
   MSG_TYPE

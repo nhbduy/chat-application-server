@@ -1,7 +1,7 @@
 CREATE TABLE TA_USERS (
   id serial,
   name varchar(100) NOT NULL UNIQUE,
-  online bool DEFAULT 0,
+  online bool DEFAULT false,
   joined timestamp,
   last_active timestamp,
   PRIMARY KEY (id)
