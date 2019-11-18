@@ -13,8 +13,8 @@ const DB_CONNECTION = {
 const DB_TABLES = {
   users: 'TA_USERS',
   rooms: 'TA_ROOMS',
-  messages: 'TA_MESSAGES',
-  re_users_rooms: 'RE_USERS_ROOMS'
+  re_users_rooms: 'RE_USERS_ROOMS',
+  messages: 'TA_MESSAGES'
 };
 
 const SOCKET_MSG = {

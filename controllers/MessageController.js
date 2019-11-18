@@ -1,6 +1,11 @@
 /* eslint-disable no-use-before-define */
 
-const { messages } = require('../mockData');
+const { asyncGetListDB, asyncInsertDB } = require('../models/messages');
+
+//--------------------------------------------------------------
+// get message from DATABASE
+let messages = [];
+asyncGetListDB().then(list => (messages = list));
 
 //--------------------------------------------------------------
 // Function: get messages in room
@@ -17,18 +22,17 @@ function setNewMessage(userId, roomId, content) {
   const seenBy = [1]; // auto seen by admin
   if (userId !== 1) seenBy.push(userId);
 
-  const time = new Date();
-
   const newMessage = {
     id: messages.length + 1,
     sender_id: userId,
     room_id: roomId,
     content,
-    create_at: time.toLocaleString(),
-    seen_by: seenBy
+    created_at: new Date(),
+    seen_by: JSON.stringify(seenBy)
   };
 
   messages.push(newMessage);
+  asyncInsertDB(newMessage);
 }
 
 //--------------------------------------------------------------

@@ -10,7 +10,7 @@ CREATE TABLE TA_USERS (
 CREATE TABLE TA_ROOMS (
   id int NOT NULL AUTO_INCREMENT,
   name varchar(255) UNIQUE,
-  type int,
+  room_type int,
   PRIMARY KEY (id)
 );
 

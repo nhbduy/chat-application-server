@@ -3,7 +3,7 @@ const cors = require('cors');
 const socketio = require('socket.io');
 const http = require('http');
 
-const { checkUserLogin } = require('./controllers/user');
+const { checkUserLogin } = require('./controllers/UserController');
 
 //------------------------------------------------------
 // if (process.env.NODE_ENV !== 'production') {

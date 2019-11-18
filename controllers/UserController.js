@@ -1,6 +1,13 @@
-/* eslint-disable import/order */
+const {
+  asyncGetListDB,
+  asyncInsertDB,
+  asyncUpdateDB
+} = require('../models/users');
 
-const { users } = require('../mockData');
+//--------------------------------------------------------------
+// get users from DATABASE
+let users = [];
+asyncGetListDB().then(list => (users = list));
 
 //--------------------------------------------------------------
 // Function: login or register
@@ -18,10 +25,11 @@ function checkUserLogin(req, res) {
       name,
       online: 0,
       joined: new Date(),
-      last_active: ''
+      last_active: new Date()
     };
 
     users.push(currentUser);
+    asyncInsertDB(currentUser);
   }
 
   try {
@@ -60,6 +68,8 @@ function setUserConnect(name) {
       users[i] = { ...users[i], online: 1, last_active: new Date() };
 
       currentUser = users[i];
+      asyncUpdateDB(currentUser);
+
       break;
     }
   }
@@ -77,6 +87,7 @@ function setUserDisconnect(name) {
       users[i] = { ...users[i], online: 0, last_active: new Date() };
 
       currentUser = users[i];
+      asyncUpdateDB(currentUser);
       break;
     }
   }

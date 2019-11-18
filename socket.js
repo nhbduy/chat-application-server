@@ -6,16 +6,19 @@ const {
   getOnlineUsers,
   setUserConnect,
   setUserDisconnect
-} = require('./controllers/user');
+} = require('./controllers/UserController');
 
 const {
   getAvailableRooms,
   setNewRoom,
   setJoinRoom,
   setLeaveRoom
-} = require('./controllers/room');
+} = require('./controllers/RoomController');
 
-const { getMessagesInRoom, setNewMessage } = require('./controllers/message');
+const {
+  getMessagesInRoom,
+  setNewMessage
+} = require('./controllers/MessageController');
 
 //-----------------------------------------------------------------------
 function socketUserConnect(client, socket) {
@@ -62,7 +65,7 @@ function socketUserCreateRoom(client, socket) {
       callback(room);
 
       // notify available room (not P2P) list to all users (include sender)
-      if (room.type === 2) {
+      if (room.room_type === 2) {
         const roomList = getAvailableRooms();
         if (roomList) socket.emit('getAvailableRooms', roomList);
       }
@@ -75,6 +78,8 @@ function socketUserJoinRoom(client, socket) {
   client.on(SOCKET_MSG.join, ({ user, room }, callback) => {
     const reUserRoom = setJoinRoom(user.id, room.id);
 
+    callback(room);
+
     // check user already joined
     if (!reUserRoom) {
       // null when existed
@@ -84,8 +89,6 @@ function socketUserJoinRoom(client, socket) {
     }
 
     client.join(room.name);
-
-    callback(room);
 
     // send admin welcome message to new user
     const adminId = 1;
@@ -104,6 +107,8 @@ function socketUserLeaveRoom(client, socket) {
   client.on(SOCKET_MSG.leave, ({ user, room }, callback) => {
     const reUserRoom = setLeaveRoom(user.id, room.id);
 
+    callback(room);
+
     // check user already left
     if (!reUserRoom) {
       // null when not existed
@@ -113,8 +118,6 @@ function socketUserLeaveRoom(client, socket) {
     }
 
     client.leave(room.name);
-
-    callback(room);
 
     // send admin welcome message to new user
     const adminId = 1;

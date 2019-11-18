@@ -1,12 +1,30 @@
 /* eslint-disable no-use-before-define */
 
-const { rooms, usersRooms } = require('../mockData');
+const {
+  asyncGetListDB: asyncGetListDB_Rooms,
+  asyncInsertDB: asyncInsertDB_Rooms,
+  asyncUpdateDB: asyncUpdateDB_Rooms
+} = require('../models/rooms');
+
+const {
+  asyncGetListDB: asyncGetListDB_UsersRooms,
+  asyncInsertDB: asyncInsertDB_UsersRooms,
+  asyncUpdateDB: asyncUpdateDB_UsersRooms,
+  asyncDeleteDB: asyncDeleteDB_UsersRooms
+} = require('../models/usersRooms');
+
+//--------------------------------------------------------------
+// get rooms from DATABASE
+let rooms = [];
+asyncGetListDB_Rooms().then(list => (rooms = list));
+let usersRooms = [];
+asyncGetListDB_UsersRooms().then(list => (usersRooms = list));
 
 //--------------------------------------------------------------
 // Function: get list
 function getAvailableRooms() {
   let list = null;
-  list = rooms.filter(u => u.type === 2);
+  list = rooms.filter(u => u.room_type === 2);
 
   if (list && list.length > 1) list.sort((a, b) => (a.name > b.name ? 1 : -1));
 
@@ -34,9 +52,10 @@ function setNewRoom(userId, roomName, roomType) {
   const newRoom = {
     id: rooms.length + 1,
     name: roomName,
-    type: roomType
+    room_type: roomType
   };
   rooms.push(newRoom);
+  asyncInsertDB_Rooms(newRoom);
 
   return newRoom;
 }
@@ -55,6 +74,7 @@ function setJoinRoom(userId, roomId) {
     room_id: roomId
   };
   usersRooms.push(reUserRoom);
+  asyncInsertDB_UsersRooms(reUserRoom);
 
   return reUserRoom;
 }
@@ -66,6 +86,8 @@ function setLeaveRoom(userId, roomId) {
       reUserRoom = usersRooms[i];
 
       usersRooms.splice(i, 1);
+      asyncDeleteDB_UsersRooms(reUserRoom);
+
       break;
     }
   }
